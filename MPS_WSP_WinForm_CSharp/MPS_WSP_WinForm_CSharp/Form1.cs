@@ -12,9 +12,12 @@ namespace MPS_WSP_WinForm_CSharp
 {
     public partial class Form1 : Form
     {
+        ConfigReader configReader;
+
         public Form1()
         {
             InitializeComponent();
+            configReader = new ConfigReader();
         }
 
         private void btnPurchase_Click(object sender, EventArgs e)
@@ -22,7 +25,7 @@ namespace MPS_WSP_WinForm_CSharp
             var mpsWS = new MPSWebService.wsSoapClient();
             var xmlRequest = @"<TStream>
                                   <Transaction>
-                                      <MerchantID>003503902913105</MerchantID>
+                                      <MerchantID>{0}</MerchantID>
                                       <OperatorID>dano</OperatorID>
                                       <TranType>Credit</TranType>
                                       <TranCode>Sale</TranCode>
@@ -39,10 +42,20 @@ namespace MPS_WSP_WinForm_CSharp
                                       </Account>
                                   </Transaction>
                                 </TStream>";
+            
+            xmlRequest = String.Format(xmlRequest, configReader.MerchantID);
+
+            MessageBox.Show(xmlRequest);
+
             Console.WriteLine(xmlRequest);
             Console.WriteLine("");
             Console.WriteLine("");
-            var xmlResponse = mpsWS.CreditTransaction(xmlRequest, "xyz");
+            
+            mpsWS.Endpoint.Address = new System.ServiceModel.EndpointAddress(configReader.MPSWSPURL);
+            var xmlResponse = mpsWS.CreditTransaction(xmlRequest, configReader.Password);
+
+            MessageBox.Show(xmlResponse);
+
             Console.WriteLine(xmlResponse);
             Console.WriteLine("");
             Console.WriteLine("");
