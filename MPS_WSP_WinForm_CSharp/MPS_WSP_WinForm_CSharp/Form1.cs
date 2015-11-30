@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Reflection;
 
 namespace MPS_WSP_WinForm_CSharp
 {
@@ -47,6 +49,18 @@ namespace MPS_WSP_WinForm_CSharp
 
             MessageBox.Show(xmlRequest);
 
+            var m_exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log.txt"))
+            {
+                w.Write("\r\nLog Entry : ");
+                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
+                    DateTime.Now.ToLongDateString());
+                w.WriteLine("  :");
+                w.WriteLine("  :{0}", xmlRequest);
+                w.WriteLine("-------------------------------");
+            }
+
             Console.WriteLine(xmlRequest);
             Console.WriteLine("");
             Console.WriteLine("");
@@ -55,6 +69,16 @@ namespace MPS_WSP_WinForm_CSharp
             var xmlResponse = mpsWS.CreditTransaction(xmlRequest, configReader.Password);
 
             MessageBox.Show(xmlResponse);
+
+            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log.txt"))
+            {
+                w.Write("\r\nLog Entry : ");
+                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
+                    DateTime.Now.ToLongDateString());
+                w.WriteLine("  :");
+                w.WriteLine("  :{0}", xmlRequest);
+                w.WriteLine("-------------------------------");
+            }
 
             Console.WriteLine(xmlResponse);
             Console.WriteLine("");
