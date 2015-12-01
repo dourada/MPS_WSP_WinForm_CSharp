@@ -26,7 +26,7 @@ namespace MPS_WSP_WinForm_CSharp
             var xmlRequest = @"<TStream>
                                   <Transaction>
                                       <MerchantID>{0}</MerchantID>
-                                      <OperatorID>dano</OperatorID>
+                                      <OperatorID>{1}</OperatorID>
                                       <TranType>Credit</TranType>
                                       <TranCode>Sale</TranCode>
                                       <Memo>Team1 money2020</Memo>
@@ -43,7 +43,7 @@ namespace MPS_WSP_WinForm_CSharp
                                   </Transaction>
                                 </TStream>";
             
-            xmlRequest = String.Format(xmlRequest, configReader.MerchantID);
+            xmlRequest = String.Format(xmlRequest, configReader.MerchantID, "test");
 
             MessageBox.Show(xmlRequest);
 
