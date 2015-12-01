@@ -24,6 +24,8 @@ namespace MPS_WSP_WinForm_CSharp
 
         private void btnPurchase_Click(object sender, EventArgs e)
         {
+            txtLog.Text += "Selected Checkout." + DateTime.Now.ToString();
+
             var mpsWS = new MPSWebService.wsSoapClient();
             var xmlRequest = @"<TStream>
                                   <Transaction>
@@ -61,6 +63,8 @@ namespace MPS_WSP_WinForm_CSharp
                 w.WriteLine("-------------------------------");
             }
 
+            txtLog.Text += xmlRequest;
+
             Console.WriteLine(xmlRequest);
             Console.WriteLine("");
             Console.WriteLine("");
@@ -80,9 +84,25 @@ namespace MPS_WSP_WinForm_CSharp
                 w.WriteLine("-------------------------------");
             }
 
+            txtLog.Text += xmlResponse;
+
             Console.WriteLine(xmlResponse);
             Console.WriteLine("");
             Console.WriteLine("");
+        }
+
+        private void btnMenuApple_Click(object sender, EventArgs e)
+        {
+            txtReceipt.Text += "1 Apple........2.15\r\n";
+            txtLog.Text += "Selected Apple." + DateTime.Now.ToString();
+        }
+
+        private void btnCheckout_Click(object sender, EventArgs e)
+        {
+            txtReceipt.Text += "\r\n";
+            txtReceipt.Text += "\r\n";
+            txtReceipt.Text += "Total..........9.85\r\n";
+            txtLog.Text += "Selected Checkout." + DateTime.Now.ToString();
         }
     }
 }
