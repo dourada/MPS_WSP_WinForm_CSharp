@@ -15,86 +15,44 @@ namespace MPS_WSP_WinForm_CSharp
     public partial class Form1 : Form
     {
         ConfigReader configReader;
+        ILogger logger;
 
         public Form1()
         {
             InitializeComponent();
             configReader = new ConfigReader();
+            logger = new MyTextAndConsoleLogger();
+            logger.Location = configReader.LoggingLocation;
         }
 
         private void btnPurchase_Click(object sender, EventArgs e)
         {
-            txtLog.Text += "Selected Checkout." + DateTime.Now.ToString();
+            AddToTextLog("Selected Checkout." + DateTime.Now.ToString(), false);
 
             var mpsWS = new MPSWebService.wsSoapClient();
-            var xmlRequest = @"<TStream>
-                                  <Transaction>
-                                      <MerchantID>{0}</MerchantID>
-                                      <OperatorID>dano</OperatorID>
-                                      <TranType>Credit</TranType>
-                                      <TranCode>Sale</TranCode>
-                                      <Memo>Team1 money2020</Memo>
-                                      <InvoiceNo>123456</InvoiceNo>
-                                      <RefNo>123456</RefNo>
-                                      <Amount>
-                                          <Purchase>2.26</Purchase>
-                                      </Amount>
-                                      <Account>
-                                            <AcctNo>5499990123456781</AcctNo>
-                                            <ExpDate>0816</ExpDate>
-                                            <AccountSource>Keyed</AccountSource>
-                                      </Account>
-                                  </Transaction>
-                                </TStream>";
-            
-            xmlRequest = String.Format(xmlRequest, configReader.MerchantID);
 
-            MessageBox.Show(xmlRequest);
+            var xmlRequest = DatacapXMLBuilder.BuildCreditSaleRequest(configReader.MerchantID);
 
-            var m_exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            AddToTextLog(xmlRequest, true);
 
-            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log.txt"))
-            {
-                w.Write("\r\nLog Entry : ");
-                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
-                    DateTime.Now.ToLongDateString());
-                w.WriteLine("  :");
-                w.WriteLine("  :{0}", xmlRequest);
-                w.WriteLine("-------------------------------");
-            }
-
-            txtLog.Text += xmlRequest;
-
-            Console.WriteLine(xmlRequest);
-            Console.WriteLine("");
-            Console.WriteLine("");
-            
             mpsWS.Endpoint.Address = new System.ServiceModel.EndpointAddress(configReader.MPSWSPURL);
             var xmlResponse = mpsWS.CreditTransaction(xmlRequest, configReader.Password);
 
-            MessageBox.Show(xmlResponse);
+            AddToTextLog(xmlResponse, true);
+        }
 
-            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log.txt"))
-            {
-                w.Write("\r\nLog Entry : ");
-                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
-                    DateTime.Now.ToLongDateString());
-                w.WriteLine("  :");
-                w.WriteLine("  :{0}", xmlRequest);
-                w.WriteLine("-------------------------------");
-            }
-
-            txtLog.Text += xmlResponse;
-
-            Console.WriteLine(xmlResponse);
-            Console.WriteLine("");
-            Console.WriteLine("");
+        private void AddToTextLog(string data, bool showMessageBox)
+        {
+            txtLog.Text += data;
+            logger.LogData(data);            
+            if (showMessageBox)
+                MessageBox.Show(data);
         }
 
         private void btnMenuApple_Click(object sender, EventArgs e)
         {
             txtReceipt.Text += "1 Apple........2.15\r\n";
-            txtLog.Text += "Selected Apple." + DateTime.Now.ToString();
+            AddToTextLog("Selected Apple", false);
         }
 
         private void btnCheckout_Click(object sender, EventArgs e)
@@ -102,7 +60,7 @@ namespace MPS_WSP_WinForm_CSharp
             txtReceipt.Text += "\r\n";
             txtReceipt.Text += "\r\n";
             txtReceipt.Text += "Total..........9.85\r\n";
-            txtLog.Text += "Selected Checkout." + DateTime.Now.ToString();
+            AddToTextLog("Selected Checkout", false);
         }
     }
 }

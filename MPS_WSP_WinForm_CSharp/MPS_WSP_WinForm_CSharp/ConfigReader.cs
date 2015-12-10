@@ -12,12 +12,14 @@ namespace MPS_WSP_WinForm_CSharp
         public string MerchantID = string.Empty;
         public string Password = string.Empty;
         public string MPSWSPURL = string.Empty;
+        public string LoggingLocation = string.Empty;
 
         public ConfigReader()
         {
             MerchantID = ConfigurationManager.AppSettings["MerchantID"];
             Password = ConfigurationManager.AppSettings["Password"];
             MPSWSPURL = ConfigurationManager.AppSettings["MPSWSPURL"];
+            LoggingLocation = ConfigurationManager.AppSettings["LoggingLocation"];
         }
     }
 }
