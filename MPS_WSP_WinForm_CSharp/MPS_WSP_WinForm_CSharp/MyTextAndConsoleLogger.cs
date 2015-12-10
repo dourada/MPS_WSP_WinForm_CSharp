@@ -13,24 +13,31 @@ namespace MPS_WSP_WinForm_CSharp
 
         void ILogger.LogData(string data)
         {
-            if (!Directory.Exists(_location))
+            try
             {
-                Directory.CreateDirectory(_location);
-            }
+                if (!Directory.Exists(_location))
+                {
+                    Directory.CreateDirectory(_location);
+                }
 
-            using (StreamWriter w = File.AppendText(_location + "\\" + "log.txt"))
+                using (StreamWriter w = File.AppendText(_location + "\\" + "log.txt"))
+                {
+                    w.Write("\r\nLog Entry : ");
+                    w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
+                        DateTime.Now.ToLongDateString());
+                    w.WriteLine("  :");
+                    w.WriteLine("  :{0}", data);
+                    w.WriteLine("-------------------------------");
+                }
+
+                Console.WriteLine("--------");
+                Console.WriteLine(data);
+                Console.WriteLine("--------");
+            }
+            catch (Exception e)
             {
-                w.Write("\r\nLog Entry : ");
-                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
-                    DateTime.Now.ToLongDateString());
-                w.WriteLine("  :");
-                w.WriteLine("  :{0}", data);
-                w.WriteLine("-------------------------------");
+                Console.WriteLine(e.ToString());
             }
-
-            Console.WriteLine("--------");
-            Console.WriteLine(data);
-            Console.WriteLine("--------");
 
         }
 
