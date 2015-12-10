@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
+using Newtonsoft.Json;
 
 namespace MPS_WSP_WinForm_CSharp
 {
@@ -21,7 +25,7 @@ namespace MPS_WSP_WinForm_CSharp
         {
             InitializeComponent();
             configReader = new ConfigReader();
-            logger = new MyTextAndConsoleLogger();
+            logger = new AzureDocumentDBLogger(configReader.EndpointUrl, configReader.AuthorizationKey);
             logger.Location = configReader.LoggingLocation;
         }
 
@@ -61,6 +65,25 @@ namespace MPS_WSP_WinForm_CSharp
             txtReceipt.Text += "\r\n";
             txtReceipt.Text += "Total..........9.85\r\n";
             AddToTextLog("Selected Checkout", false);
+        }
+
+        private void btnAdmin_Click(object sender, EventArgs e)
+        {
+            var client = new DocumentClient(new Uri(configReader.EndpointUrl), configReader.AuthorizationKey);
+            var database = client.CreateDatabaseQuery().Where(db => db.Id == "LoggerDatabase").AsEnumerable().FirstOrDefault();
+            var documentCollection = client.CreateDocumentCollectionQuery("dbs/" + database.Id).Where(c => c.Id == "LoggerCollection").AsEnumerable().FirstOrDefault();
+
+            txtLog.Clear();
+
+            var logEntries =
+                from f in client.CreateDocumentQuery("dbs/" + database.Id + "/colls/" + documentCollection.Id)
+                select f;
+
+            foreach (var logEntry in logEntries)
+            {
+                txtLog.Text += logEntry;
+            }
+
         }
     }
 }

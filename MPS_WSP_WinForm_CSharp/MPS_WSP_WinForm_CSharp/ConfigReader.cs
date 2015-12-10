@@ -13,6 +13,8 @@ namespace MPS_WSP_WinForm_CSharp
         public string Password = string.Empty;
         public string MPSWSPURL = string.Empty;
         public string LoggingLocation = string.Empty;
+        public string EndpointUrl = string.Empty;
+        public string AuthorizationKey = string.Empty;
 
         public ConfigReader()
         {
@@ -20,6 +22,9 @@ namespace MPS_WSP_WinForm_CSharp
             Password = ConfigurationManager.AppSettings["Password"];
             MPSWSPURL = ConfigurationManager.AppSettings["MPSWSPURL"];
             LoggingLocation = ConfigurationManager.AppSettings["LoggingLocation"];
+            EndpointUrl = ConfigurationManager.AppSettings["EndpointUrl"];
+            AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
+             
         }
     }
 }

@@ -112,7 +112,7 @@
             // 
             // btnCheckout
             // 
-            this.btnCheckout.Location = new System.Drawing.Point(391, 148);
+            this.btnCheckout.Location = new System.Drawing.Point(391, 147);
             this.btnCheckout.Name = "btnCheckout";
             this.btnCheckout.Size = new System.Drawing.Size(75, 23);
             this.btnCheckout.TabIndex = 7;
@@ -147,6 +147,7 @@
             this.btnAdmin.TabIndex = 7;
             this.btnAdmin.Text = "Admin";
             this.btnAdmin.UseVisualStyleBackColor = true;
+            this.btnAdmin.Click += new System.EventHandler(this.btnAdmin_Click);
             // 
             // btnReports
             // 
